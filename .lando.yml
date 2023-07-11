@@ -1,0 +1,37 @@
+name: diyhrt
+recipe: symfony
+excludes:
+  - htdocs/vendor
+  - htdocs/var/cache
+  - htdocs/node_modules
+config:
+  php: '8.2'
+  composer_version: '2.2.12'
+  via: apache:2.4
+  webroot: htdocs/public
+  #  database: mysql:5.7
+  xdebug: false
+  config:
+    database: mysql
+services:
+  node:
+    type: 'node:18'
+  phpmyadmin:
+    type: phpmyadmin
+tooling:
+  npm:
+    service: node
+    dir: /app/htdocs
+  composer:
+    service: appserver
+    cmd: composer
+    dir: /app/htdocs
+  console:
+    service: appserver
+    cmd: htdocs/bin/console
+  c:
+    service: appserver
+    cmd: htdocs/bin/console
+  symfony:
+    service: appserver
+    dir: /app/htdocs
