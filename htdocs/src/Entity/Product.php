@@ -5,14 +5,9 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-enum productType: string {
-
-}
-
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,19 +17,22 @@ class Product
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $price = null;
+    private ?int $price = null;
 
     #[ORM\Column(nullable: true)]
-    private ?float $priceBulk = null;
+    private ?int $priceBulk = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $url = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $priceXpath = null;
+    private ?string $prixeXpath = null;
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $notes = null;
+
+    #[ORM\ManyToOne(inversedBy: 'products')]
+    private ?Supplier $supplier = null;
 
     public function getId(): ?int
     {
@@ -53,50 +51,38 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?int
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(?int $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getPriceBulk(): ?float
+    public function getPriceBulk(): ?int
     {
         return $this->priceBulk;
     }
 
-    public function setPriceBulk(?float $priceBulk): static
+    public function setPriceBulk(?int $priceBulk): static
     {
         $this->priceBulk = $priceBulk;
 
         return $this;
     }
 
-    public function getUrl(): ?string
+    public function getPrixeXpath(): ?string
     {
-        return $this->url;
+        return $this->prixeXpath;
     }
 
-    public function setUrl(string $url): static
+    public function setPrixeXpath(string $prixeXpath): static
     {
-        $this->url = $url;
-
-        return $this;
-    }
-
-    public function getPriceXpath(): ?string
-    {
-        return $this->priceXpath;
-    }
-
-    public function setPriceXpath(?string $priceXpath): static
-    {
-        $this->priceXpath = $priceXpath;
+        $this->prixeXpath = $prixeXpath;
 
         return $this;
     }
@@ -113,33 +99,27 @@ class Product
         return $this;
     }
 
-//    public function isCorrectType(): bool
-//    {
-//        try {
-//            return match($this->type) {
-//                "Estradiol Pills" => true,
-//                "Estradiol Patches" => true,
-//                "Estradiol Gel" => true,
-//                "Estradiol Injections" => true,
-//                "Progesterone Capsules" => true,
-//                "Progesterone Gel" => true,
-//                "Progesterone Injections" => true,
-//                "Cyproterone Acetate" => true,
-//                "Bicalutamide" => true,
-//                "Spironolactone" => true,
-//                "GnRH Agonists" => true,
-//                "Finasteride" => true,
-//                "Dutasteride" => true,
-//                "Raloxifene" => true,
-//                "Tamoxifen" => true,
-//                "Clomifene" => true,
-//                "Domperidone" => true,
-//                "Pioglitazone" => true,
-//                "HydroxyProg Injections" => true,
-//            };
-//        } catch (\UnhandledMatchError) {
-//            return false;
-//        }
-//
-//    }
+    public function getNotes(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function setNotes(?string $notes): static
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function getSupplier(): ?Supplier
+    {
+        return $this->supplier;
+    }
+
+    public function setSupplier(?Supplier $supplier): static
+    {
+        $this->supplier = $supplier;
+
+        return $this;
+    }
 }
