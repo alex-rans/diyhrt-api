@@ -42,7 +42,8 @@ class ScrapeWikiCommand extends Command
         if (!$url) {
             $io->note(sprintf("You didn't pass the url"));
         }
-        $this->wikiScraper->getProducts($url);
+        $productsArray = $this->wikiScraper->getProducts($url);
+        $this->wikiScraper->insertIntoDatabase($productsArray);
 
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 

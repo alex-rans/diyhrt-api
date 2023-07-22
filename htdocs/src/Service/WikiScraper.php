@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Product;
 use App\Entity\Supplier;
 use Doctrine\ORM\EntityManagerInterface;
 use Spekulatius\PHPScraper\PHPScraper;
@@ -45,11 +46,11 @@ class WikiScraper
             $supplier = $this->entityManager->getRepository(Supplier::class)->findOneBy(['name' => $supplier]);
 
             $price = preg_replace('/[^0-9.]+/', '', trim($productArray[2]));
-            $price = (float) $price;
+            $price = (float)$price;
 
             $notes = null;
-            if(!empty(trim($productArray[8]))){
-                $notes = $productArray[8];
+            if (!empty(trim($productArray[8]))) {
+                $notes = trim($productArray[8]);
             }
 
             $productObject = [
@@ -57,10 +58,39 @@ class WikiScraper
                 "price" => $price,
                 "supplierId" => $supplier->getId(),
                 "url" => $url,
-                "notes" => trim($notes)
+                "notes" => $notes
             ];
             array_push($productsArray, $productObject);
         }
         return $productsArray;
+    }
+
+    public function insertIntoDatabase(array $productsArray): bool
+    {
+        foreach ($productsArray as $inputProduct) {
+            $supplier = $this->entityManager->getRepository(Supplier::class)->find($inputProduct["supplierId"]);
+
+            $product = $this->entityManager->getRepository(Product::class)->findOneBy([
+                'name' => $inputProduct["name"],
+                'supplier' => $supplier
+            ]);
+            if (!$product){
+
+                $product = new Product();
+                $product->setName($inputProduct["name"]);
+                $product->setPrice($inputProduct["price"]);
+                $product->setSupplier($supplier);
+                $product->setUrl($inputProduct["url"]);
+                $product->setType("Estradiol Pills");
+
+                $this->entityManager->persist($product);
+                $this->entityManager->flush();
+            }
+            else {
+                print_r("Product already exists");
+            }
+
+        }
+        return true;
     }
 }

@@ -17,12 +17,12 @@ class Product
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $price = null;
+    private ?float $price = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $priceBulk = null;
+    private ?float $priceBulk = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $prixeXpath = null;
 
     #[ORM\Column(length: 255)]
@@ -33,6 +33,9 @@ class Product
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Supplier $supplier = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $url = null;
 
     public function getId(): ?int
     {
@@ -119,6 +122,18 @@ class Product
     public function setSupplier(?Supplier $supplier): static
     {
         $this->supplier = $supplier;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): static
+    {
+        $this->url = $url;
 
         return $this;
     }
