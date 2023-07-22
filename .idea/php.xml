@@ -91,6 +91,17 @@
       <path value="$PROJECT_DIR$/htdocs/vendor/psr/clock" />
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/serializer" />
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/web-profiler-bundle" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/spekulatius/phpscraper" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/league/uri-interfaces" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/league/uri" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/http-client" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/css-selector" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/dom-crawler" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/http-client-contracts" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/browser-kit" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/psr/http-message" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/donatello-za/rake-php-plus" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

@@ -87,6 +87,17 @@
       <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/psr/clock" />
       <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/symfony/serializer" />
       <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/symfony/web-profiler-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/donatello-za/rake-php-plus" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/league/uri" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/masterminds/html5" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/psr/http-message" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/spekulatius/phpscraper" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/symfony/browser-kit" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/symfony/css-selector" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/symfony/dom-crawler" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/symfony/http-client" />
+      <excludeFolder url="file://$MODULE_DIR$/htdocs/vendor/symfony/http-client-contracts" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
