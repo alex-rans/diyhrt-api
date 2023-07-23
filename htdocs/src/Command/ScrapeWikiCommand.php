@@ -31,25 +31,34 @@ class ScrapeWikiCommand extends Command
 
     protected function configure(): void
     {
-        $this->addArgument('url', InputArgument::OPTIONAL, 'Argument description');
+        $this->addArgument('url', InputArgument::OPTIONAL, 'url to the page of products');
+        $this->addOption('suppliers', 's', InputOption::VALUE_NONE, 'option to scrape suppliers');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $url = $input->getArgument('url');
+        if($input->getOption('suppliers')){
+            $this->wikiScraper->scrapeSuppliers();
+            return Command::SUCCESS;
+        };
 
         if (!$url) {
-            $io->note(sprintf("You didn't pass the url"));
+            $io->error(sprintf("You didn't pass the url"));
+            return Command::FAILURE;
         }
+
         $productsArray = $this->wikiScraper->getProducts($url);
         print_r($productsArray);
         $addToDb = $io->confirm('Do you want to add this data to the database?');
-        if($addToDb){
-            $this->wikiScraper->insertIntoDatabase($productsArray);
-        }
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
+        if($addToDb){
+            $this->wikiScraper->insertProductsIntoDatabase($productsArray);
+            $io->success("Operation finished.\n");
+            return Command::SUCCESS;
+        }
         return Command::SUCCESS;
+
     }
 }

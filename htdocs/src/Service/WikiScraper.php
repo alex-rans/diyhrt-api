@@ -82,7 +82,7 @@ class WikiScraper
         return $productsArray;
     }
 
-    public function insertIntoDatabase(array $productsArray): void
+    public function insertProductsIntoDatabase(array $productsArray): void
     {
         foreach ($productsArray as $inputProduct) {
             $supplier = $this->entityManager->getRepository(Supplier::class)->find($inputProduct["supplierId"]);
@@ -117,5 +117,25 @@ class WikiScraper
                 $this->entityManager->flush();
             }
         }
+    }
+    public function scrapeSuppliers(){
+        //TODO: Kind of ass to scrape rn because of table layout. Will finish later
+        print_r("Not implemented yet\n");
+        return
+        $web = $this->init('https://diyhrt.cafe/index.php?title=Main_Page&action=edit');
+        $text = $web->filter('//*[@id="wpTextbox1"]')->text();
+        $textArray = explode("|+", $text);
+        $suppliersArray = $textArray[1];
+        $suppliersArray = explode("|-", $suppliersArray);
+        array_shift($suppliersArray);
+        foreach ($suppliersArray as $supplier) {
+            $supplierArray = explode("|", $supplier);
+
+            //get supplier name and url
+            $supplierNameArray = str_replace(['[', ']'], '', $supplierArray[1]);
+            $supplierNameArray = explode(" ", $supplierNameArray);
+            dd($supplierNameArray);
+        }
+        dd($suppliersArray);
     }
 }

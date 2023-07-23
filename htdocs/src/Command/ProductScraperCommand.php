@@ -31,21 +31,20 @@ class ProductScraperCommand extends Command
 
     protected function configure(): void
     {
-        $this
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
-        ;
+//        $this
+//            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
+//            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+//        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $choices = $io->choice('test', $this->productScraper->getChoices(), multiSelect: true);
-        $this->productScraper->getPriceData($choices);
-
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
-
+        $choices = $io->choice('Which products would you like to scrape?', $this->productScraper->getChoices(), multiSelect: true);
+        $updatedList = $this->productScraper->getPriceData($choices);
+        $io->text('updated products:');
+        print_r($updatedList);
+        $io->success('Products successfully scraped.');
         return Command::SUCCESS;
     }
 }

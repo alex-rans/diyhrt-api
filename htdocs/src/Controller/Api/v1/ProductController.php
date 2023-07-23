@@ -42,6 +42,7 @@ class ProductController extends AbstractController
                 'p.price as product_price',
                 'p.priceBulk AS product_price_bulk',
                 'p.notes AS product_notes',
+                'p.url AS product_link',
                 's.id AS supplier_id')
             ->from('App\Entity\Product', 'p')
             ->leftJoin('p.supplier', 's')
@@ -107,6 +108,7 @@ class ProductController extends AbstractController
                 'p.price as product_price',
                 'p.priceBulk AS product_price_bulk',
                 'p.notes AS product_notes',
+                'p.url AS product_link',
                 's.id AS supplier_id')
             ->from('App\Entity\Product', 'p')
             ->leftJoin('p.supplier', 's')
@@ -142,6 +144,7 @@ class ProductController extends AbstractController
                 'p.price as product_price',
                 'p.priceBulk AS product_price_bulk',
                 'p.notes AS product_notes',
+                'p.url AS product_link',
                 's.id AS supplier_id')
             ->from('App\Entity\Product', 'p')
             ->where('p.id = :id')

@@ -31,6 +31,9 @@ class Supplier
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $notes = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $currency = null;
+
 //    #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Product::class)]
 //    private Collection $products;
 
@@ -133,4 +136,16 @@ class Supplier
 //
 //        return $this;
 //    }
+
+public function getCurrency(): ?string
+{
+    return $this->currency;
+}
+
+public function setCurrency(string $currency): static
+{
+    $this->currency = $currency;
+
+    return $this;
+}
 }

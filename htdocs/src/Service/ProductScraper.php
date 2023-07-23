@@ -52,24 +52,50 @@ class ProductScraper
         $web->go($url);
         return $web;
     }
-    public function getPriceData(array $productTypes){
+    public function getPriceData(array $productTypes): array{
+        $updatedProducts = [];
         foreach ($productTypes as $productType){
             $products = $this->entityManager->getRepository(Product::class)->findBy(["type" => $productType]);
             foreach ($products as $product){
+                if(!$product->getPrixeXpath()){
+                    continue;
+                }
                 $web = $this->init($product->getUrl());
-                $price = $web->filter($product->getPrixeXpath())->text();
+
+                //try getting this otherwise itll crash
+                try {
+                    $price = $web->filter($product->getPrixeXpath())->text();
+                } catch (\InvalidArgumentException $e) {
+                    print_r("Price XPath could not be found; Breaking.\n");
+                    continue;
+                }
+
                 $price = preg_replace('/[^0-9.]+/', '', $price);
+
+                if (empty($product) || !$price){
+                    print_r("Price is not a number or could not be found. Breaking.\n");
+                    continue;
+                }
                 $price = (float) $price;
                 if ($price != $product->getPrice()) {
+                    print_r("Price for product {$product->getName()} with ID {$product->getId()} has changed. Updating...\n");
                     $product->setPrice($price);
                     $product->setPriceBulk(null);
 
                     $this->entityManager->persist($product);
                     $this->entityManager->flush();
-                    print_r("product with ID {$product->getId()} has been updated. Be sure to update the bulk price and mg price manually. \n");
-                    dd('cum');
+                    array_push($updatedProducts, [$product->getId() => $product->getName()]);
                 }
             }
+        }
+        return $updatedProducts;
+    }
+    public function test(){
+        $web = $this->init('https://www.google.com/');
+        try {
+            $price = $web->filter('//*[@id="goods_price"]')->text();
+        } catch (\InvalidArgumentException $e) {
+            print_r("oopsie whoopsie we did a fucky wucky");
         }
     }
 
