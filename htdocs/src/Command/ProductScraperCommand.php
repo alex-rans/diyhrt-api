@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Service\WikiScraper;
+use App\Service\ProductScraper;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -12,42 +12,38 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'scrape:wiki',
+    name: 'scrape:products',
     description: 'Add a short description for your command',
 )]
-class ScrapeWikiCommand extends Command
+class ProductScraperCommand extends Command
 {
-    private WikiScraper $wikiScraper;
+    private ProductScraper $productScraper;
 
     /**
-     * @param WikiScraper $wikiScraper
+     * @param ProductScraper $productScraper
      */
-    public function __construct(WikiScraper $wikiScraper)
+    public function __construct(ProductScraper $productScraper)
     {
-        $this->wikiScraper = $wikiScraper;
+        $this->productScraper = $productScraper;
         parent::__construct();
     }
 
 
     protected function configure(): void
     {
-        $this->addArgument('url', InputArgument::OPTIONAL, 'Argument description');
+        $this
+            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $url = $input->getArgument('url');
+        $choices = $io->choice('test', $this->productScraper->getChoices(), multiSelect: true);
+        $this->productScraper->getPriceData($choices);
 
-        if (!$url) {
-            $io->note(sprintf("You didn't pass the url"));
-        }
-        $productsArray = $this->wikiScraper->getProducts($url);
-        print_r($productsArray);
-        $addToDb = $io->confirm('Do you want to add this data to the database?');
-        if($addToDb){
-            $this->wikiScraper->insertIntoDatabase($productsArray);
-        }
+
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
 
         return Command::SUCCESS;

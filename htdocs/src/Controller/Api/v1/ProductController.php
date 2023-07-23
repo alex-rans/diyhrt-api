@@ -437,7 +437,7 @@ class ProductController extends AbstractController
             "Cyproterone Acetate",
             "Bicalutamide",
             "Spironolactone",
-            "GnRH Agonists",
+            "Gonadotropin-Releasing Hormone Agonists",
             "Finasteride",
             "Dutasteride",
             "Raloxifene",
@@ -445,7 +445,7 @@ class ProductController extends AbstractController
             "Clomifene",
             "Domperidone",
             "Pioglitazone",
-            "HydroxyProg Injections",
+            "Hydroxyprogesterone Caproate Injections",
         ];
         return $this->json($types);
     }

@@ -54,24 +54,24 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(?int $price): static
+    public function setPrice(?float $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    public function getPriceBulk(): ?int
+    public function getPriceBulk(): ?float
     {
         return $this->priceBulk;
     }
 
-    public function setPriceBulk(?int $priceBulk): static
+    public function setPriceBulk(?float $priceBulk): static
     {
         $this->priceBulk = $priceBulk;
 

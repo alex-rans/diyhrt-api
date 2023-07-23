@@ -20,6 +20,7 @@ final class Version20230722104141 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        // TODO: scrape this from website
         $this->addSql('INSERT INTO supplier (name, shipping, payment_methods, url) VALUES ("InHousePharmacy", "Ships from Vanuatu", "a:1:{i:0;s:13:\"Bank Transfer\";}", "https://inhousepharmacy.vu")');
         $this->addSql('INSERT INTO supplier (name, shipping, payment_methods, url) VALUES ("EUAibolit", "Ships from EU", "a:1:{i:0;s:13:\"Bank Transfer\";}", "https://diyhrt.cafe/index.php/EUAibolit_Updates")');
         $this->addSql('INSERT INTO supplier (name, shipping, payment_methods, url) VALUES ("UnitedPharmacies-UK", "HK to UK", "a:2:{i:0;s:13:\"Bank Transfer\";i:1;s:7:\"Bitcoin\";}", "https://unitedpharmacies-uk.md/")');

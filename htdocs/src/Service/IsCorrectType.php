@@ -18,7 +18,7 @@ class IsCorrectType
                 "Cyproterone Acetate" => true,
                 "Bicalutamide" => true,
                 "Spironolactone" => true,
-                "GnRH Agonists" => true,
+                "Gonadotropin-Releasing Hormone Agonists" => true,
                 "Finasteride" => true,
                 "Dutasteride" => true,
                 "Raloxifene" => true,
@@ -26,7 +26,7 @@ class IsCorrectType
                 "Clomifene" => true,
                 "Domperidone" => true,
                 "Pioglitazone" => true,
-                "HydroxyProg Injections" => true,
+                "Hydroxyprogesterone Caproate Injections" => true,
             };
         } catch (\UnhandledMatchError) {
             return false;
