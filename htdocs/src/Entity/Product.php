@@ -4,37 +4,48 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use OpenApi\Attributes as OA;
 
+#[OA\Schema]
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[OA\Property]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[OA\Property]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
+    #[OA\Property]
     private ?float $price = null;
 
     #[ORM\Column(nullable: true)]
+    #[OA\Property]
     private ?float $priceBulk = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[OA\Property]
     private ?string $prixeXpath = null;
 
     #[ORM\Column(length: 255)]
+    #[OA\Property]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[OA\Property]
     private ?string $notes = null;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
+    #[OA\Property]
     private ?Supplier $supplier = null;
 
     #[ORM\Column(length: 255)]
+    #[OA\Property]
     private ?string $url = null;
 
     public function getId(): ?int

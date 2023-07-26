@@ -43,6 +43,12 @@ lando c scrape:wiki "{url}"
 php bin/console scrape:wiki "{url}"
 ```
 
+
+| Option | Description |
+| --- | --- |
+| -s, --supplier | Scrapes the front page for suppliers. Optional |
+| url | Url to product type page thing? |
+
 **Scrape product pages**
 ```
 // dev environment
@@ -50,3 +56,7 @@ lando c scrape:products [options, comma seperated]
 // production environment
 php bin/console scrape:products [options, comma seperated]
 ```
+
+| Option | Description |
+| --- | --- |
+| [options] | Option of product types |
