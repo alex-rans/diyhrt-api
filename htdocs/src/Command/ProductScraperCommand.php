@@ -40,6 +40,7 @@ class ProductScraperCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        //$this->productScraper->test(4);
         $choices = $io->choice('Which products would you like to scrape?', $this->productScraper->getChoices(), multiSelect: true);
         $updatedList = $this->productScraper->getPriceData($choices);
         $io->text('updated products:');

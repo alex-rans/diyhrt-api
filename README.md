@@ -23,6 +23,20 @@ From there you can import the sql dump into the database.
 
 If you use windows you can use WSL to set up a linux dev environment.
 
+## Product XPaths's
+
+Currently, there are two places to store XPath information in the database. A field in a Supplier record and a field in
+a Product record. The standard way is to put the XPath in a supplier record. Most websites have the price in the same
+location in the DOM but on rare occasions this is not the case. If it's different (like Favskinshouse for example) we
+store the XPath information in a product record. The ProductScraper service will first use the supplier xpath. If that
+field is NULL than the service will use the XPath used in a product record.
+
+Current list of sites that have or can have different XPath's:
+* otkph.com (depends on product variant)
+* favskinshouse.com (id number)
+* unitedpharmacies.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
+* unitedpharmacies-uk.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
+
 ## API
 
 ### Authorization
@@ -36,6 +50,7 @@ administrator.
 There are a few commands available to scrape data from both the wiki and from product pages.
 
 **Scrape from wiki**
+
 ```
 // dev environment
 lando c scrape:wiki "{url}"
@@ -43,13 +58,13 @@ lando c scrape:wiki "{url}"
 php bin/console scrape:wiki "{url}"
 ```
 
-
-| Option | Description |
-| --- | --- |
+| Option         | Description                                    |
+|----------------|------------------------------------------------|
 | -s, --supplier | Scrapes the front page for suppliers. Optional |
-| url | Url to product type page thing? |
+| url            | Url to product type page thing?                |
 
 **Scrape product pages**
+
 ```
 // dev environment
 lando c scrape:products [options, comma seperated]
@@ -57,6 +72,6 @@ lando c scrape:products [options, comma seperated]
 php bin/console scrape:products [options, comma seperated]
 ```
 
-| Option | Description |
-| --- | --- |
+| Option    | Description             |
+|-----------|-------------------------|
 | [options] | Option of product types |

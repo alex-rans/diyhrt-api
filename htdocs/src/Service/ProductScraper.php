@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Spekulatius\PHPScraper\PHPScraper;
+use Symfony\Component\DomCrawler\Crawler;
 
 class ProductScraper
 {
@@ -38,6 +39,7 @@ class ProductScraper
     /**
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface $logger
+     * @param Crawler $crawler
      */
     public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
     {
@@ -62,33 +64,47 @@ class ProductScraper
         foreach ($productTypes as $productType){
             $products = $this->entityManager->getRepository(Product::class)->findBy(["type" => $productType]);
             foreach ($products as $product){
-                print_r("[ID: {$product->getId()}]: Scraping...\n");
-                if(!$product->getPrixeXpath()){
-                    print_r("[ID: {$product->getId()}]: No XPath; Breaking.\n");
+                print_r("[ID: {$product->getId()}]: Scraping...");
+
+                if(!$product->getPrixeXpath() && !$product->getSupplier()->getPriceXPath()){
+                    print_r(" No XPath; Breaking.\n");
                     continue;
                 }
+
                 $web = $this->init($product->getUrl());
 
-
-                //try getting this otherwise itll crash
-                try {
-                    $price = $web->filter($product->getPrixeXpath())->text();
-                } catch (\InvalidArgumentException $e) {
-                    print_r("[ID: {$product->getId()}]: Price XPath could not be found; Breaking.\n");
-                    continue;
-                } catch (Exception $e) {
-                    print_r("[ID: {$product->getId()}]: An error occurred.\n");
-                    continue;
+                if($product->getPrixeXpath()){
+                    try {
+                        $price = $web->filter($product->getPrixeXpath())->text();
+                    } catch (\InvalidArgumentException $e) {
+                        print_r(" Price XPath could not be found; Breaking.\n");
+                        continue;
+                    } catch (Exception $e) {
+                        print_r(" An error occurred. See logs for more information.\n");
+                        continue;
+                    }
                 }
-                $price = preg_replace('/[^0-9.]+/', '', $price);
+                else {
+                    try {
+                        $price = $web->filter($product->getSupplier()->getPriceXPath())->text();
+                    } catch (\InvalidArgumentException $e) {
+                        print_r(" Price XPath could not be found; Breaking.\n");
+                        continue;
+                    } catch (Exception $e) {
+                        print_r(" An error occurred. See logs for more information.\n");
+                        continue;
+                    }
+                }
 
+
+                $price = preg_replace('/[^0-9.]+/', '', $price);
                 if (empty($product) || !$price){
-                    print_r("[ID: {$product->getId()}]: Price is not a number or could not be found; Breaking.\n");
+                    print_r(" Price is not a number or could not be found; Breaking.");
                     continue;
                 }
                 $price = (float) $price;
                 if ($price != $product->getPrice()) {
-                    print_r("Price for product {$product->getName()} with ID {$product->getId()} has changed. Updating...\n");
+                    print_r(" Price for product {$product->getName()} has changed. Updating.");
                     $product->setPrice($price);
                     $product->setPriceBulk(null);
 
@@ -96,16 +112,65 @@ class ProductScraper
                     $this->entityManager->flush();
                     array_push($updatedProducts, [$product->getId() => $product->getName()]);
                 }
+                print_r("\n");
             }
         }
         return $updatedProducts;
     }
-    public function test(){
-        $web = $this->init('https://www.google.com/');
-        try {
-            $price = $web->filter('//*[@id="goods_price"]')->text();
-        } catch (\InvalidArgumentException $e) {
-            print_r("oopsie whoopsie we did a fucky wucky");
+    public function test(int $id)
+    {
+        $product = $this->entityManager->getRepository(Product::class)->find($id);
+        print_r("[ID: {$product->getId()}]: Scraping...\n");
+
+        if(!$product->getPrixeXpath() && !$product->getSupplier()->getPriceXPath()){
+            print_r("[ID: {$product->getId()}]: No XPath; Breaking.\n");
+            return;
+        }
+
+        $web = $this->init($product->getUrl());
+        $site = file_get_contents($product->getUrl());
+        $crawler = new Crawler($site);
+        dd($crawler->filterXPath($product->getPrixeXpath())->text());
+
+        if($product->getSupplier()->getPriceXPath()){
+            try {
+                $price = $web->filter($product->getSupplier()->getPriceXPath())->text();
+            } catch (\InvalidArgumentException $e) {
+                print_r("Price XPath could not be found; Breaking.\n");
+                return;
+            } catch (Exception $e) {
+                print_r("An error occurred. Check the logs for more information.\n");
+                return;
+            }
+        }
+        else {
+            try {
+                $price = $web->filterXPath($product->getPrixeXpath());
+                return $price->text();
+            } catch (\InvalidArgumentException $e) {
+                print_r("Price XPath could not be found; Breaking.\n");
+                dd($e);
+                return;
+            } catch (Exception $e) {
+                print_r("An error occurred. Check the logs for more information.\n");
+                return;
+            }
+        }
+
+
+        $price = preg_replace('/[^0-9.]+/', '', $price);
+        if (empty($product) || !$price){
+            print_r("[ID: {$product->getId()}]: Price is not a number or could not be found; Breaking.\n");
+            return;
+        }
+        $price = (float) $price;
+        if ($price != $product->getPrice()) {
+            print_r("Price for product {$product->getName()} with ID {$product->getId()} has changed. Updating...\n");
+            $product->setPrice($price);
+            $product->setPriceBulk(null);
+
+            $this->entityManager->persist($product);
+            $this->entityManager->flush();
         }
     }
 

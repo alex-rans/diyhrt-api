@@ -34,6 +34,9 @@ class Supplier
     #[ORM\Column(length: 255)]
     private ?string $currency = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $priceXPath = null;
+
 //    #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Product::class)]
 //    private Collection $products;
 
@@ -145,6 +148,18 @@ public function getCurrency(): ?string
 public function setCurrency(string $currency): static
 {
     $this->currency = $currency;
+
+    return $this;
+}
+
+public function getPriceXPath(): ?string
+{
+    return $this->priceXPath;
+}
+
+public function setPriceXPath(?string $priceXPath): static
+{
+    $this->priceXPath = $priceXPath;
 
     return $this;
 }
