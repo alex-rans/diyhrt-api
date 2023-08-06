@@ -32,10 +32,18 @@ store the XPath information in a product record. The ProductScraper service will
 field is NULL than the service will use the XPath used in a product record.
 
 Current list of sites that have or can have different XPath's:
-* otkph.com (depends on product variant)
+
 * favskinshouse.com (id number)
 * unitedpharmacies.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
 * unitedpharmacies-uk.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
+* SELECT * FROM `product` WHERE supplier_id IN (3, 4, 12);
+
+## Product units
+
+price/mg or bulk/mg is calculated and therefore not stored in the database. The way the back-end calculates this is by
+dividing the price by the amount of "untis". The units is usually just the amount of milligrams but sometimes it can be
+a different number depending on how the wiki displays or calculates price/unit. Is this stupid? Yes. Does it work? Also
+yes.
 
 ## API
 

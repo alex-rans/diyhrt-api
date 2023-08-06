@@ -10,6 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'products:update-prices')]
 class UpdatePrices extends Command
 {
+    //TODO: wiki api update bullshit
     protected static $defaultDescription = 'Scrapes price data from website';
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

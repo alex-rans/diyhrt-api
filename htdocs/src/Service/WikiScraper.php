@@ -102,7 +102,6 @@ class WikiScraper
                 $product->setNotes($inputProduct["notes"]);
 
                 $this->entityManager->persist($product);
-                $this->entityManager->flush();
             } else {
                 //updating
                 print_r("Product already exists. Updating\n");
@@ -111,11 +110,10 @@ class WikiScraper
                 $product->setPrice($inputProduct["price"]);
                 $product->setPriceBulk($inputProduct["priceBulk"]);
                 $product->setSupplier($supplier);
-                $product->setUrl($inputProduct["url"]);
                 $product->setType($inputProduct["type"]);
                 $product->setNotes($inputProduct["notes"]);
-                $this->entityManager->flush();
             }
+            $this->entityManager->flush();
         }
     }
     public function scrapeSuppliers(){

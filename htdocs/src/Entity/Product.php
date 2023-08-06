@@ -48,6 +48,9 @@ class Product
     #[OA\Property]
     private ?string $url = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $units = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -145,6 +148,18 @@ class Product
     public function setUrl(string $url): static
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getUnits(): ?int
+    {
+        return $this->units;
+    }
+
+    public function setUnits(?int $units): static
+    {
+        $this->units = $units;
 
         return $this;
     }

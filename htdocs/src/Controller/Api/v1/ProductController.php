@@ -3,7 +3,7 @@
 namespace App\Controller\Api\v1;
 
 use App\Entity\Product;
-use App\Service\IsCorrectType;
+use App\Service\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -92,12 +92,12 @@ class ProductController extends AbstractController
     #[Route('/api/v1/product/type/', name: 'v1_getProductByType', methods: ['GET'])]
     public function getProductByType(EntityManagerInterface $entityManager,
                                      Request                $request,
-                                     IsCorrectType          $isCorrectType): JsonResponse|Response
+                                     Types          $types): JsonResponse|Response
     {
         if (!$request->get('type')) {
             return new Response('Error 400: Parameter \'type\' was left empty', '400');
         }
-        if (!$isCorrectType->isCorrectType($request->get('type'))) {
+        if (!$types->isCorrectType($request->get('type'))) {
             return new Response('Error 400: Parameter \'type\' is incorrect', '400');
         }
 
@@ -212,9 +212,9 @@ class ProductController extends AbstractController
     )]
     #[Route('/api/v1/product/', name: 'v1_insertProduct', methods: ['POST'])]
     public function insertProduct(EntityManagerInterface $entityManager,
-                                  Request                $request, IsCorrectType $isCorrectType): JsonResponse|Response
+                                  Request                $request, Types $types): JsonResponse|Response
     {
-        if ($isCorrectType->isCorrectType($request->get('type'))) {
+        if ($types->isCorrectType($request->get('type'))) {
             return new Response('Error 400: The type is not correct', '400');
         }
 
@@ -345,13 +345,13 @@ class ProductController extends AbstractController
     )]
     #[Route('/api/v1/product/{id}', name: 'v1_updateProduct', methods: ['POST'])]
     public function updateProduct(EntityManagerInterface $entityManager,
-                                  Request                $request, IsCorrectType $isCorrectType,
+                                  Request                $request, Types $types,
                                                          $id): JsonResponse|Response
     {
         $product = $entityManager->getRepository(Product::class)->find($id);
 
         if ($request->get('type')) {
-            if (!$isCorrectType->isCorrectType($request->get('type'))) {
+            if (!$types->isCorrectType($request->get('type'))) {
                 return new Response('Error 400: The type is not correct', '400');
             }
             $product->setType($request->get('type'));

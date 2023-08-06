@@ -5,7 +5,7 @@ namespace App\Controller\Api\v1;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\IsCorrectType;
+use App\Service\Types;
 use App\Service\ProductScraper;
 use App\Service\RandomGenerator;
 use Doctrine\ORM\EntityManagerInterface;
