@@ -102,6 +102,7 @@
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/browser-kit" />
       <path value="$PROJECT_DIR$/htdocs/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/htdocs/vendor/donatello-za/rake-php-plus" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/webpack-encore-bundle" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">

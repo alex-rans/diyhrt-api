@@ -28,7 +28,7 @@ class ApiKeyAuthenticator extends AbstractAuthenticator
     {
         return $request->isMethod('POST') ||
             $request->isMethod('DELETE') ||
-            str_starts_with($request->getPathInfo(), '/api/v1/users');
+            str_starts_with($request->getPathInfo(), '/api/v1/user');
     }
 
     public function authenticate(Request $request): Passport

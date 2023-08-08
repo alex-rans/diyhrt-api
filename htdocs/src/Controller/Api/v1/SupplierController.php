@@ -2,7 +2,6 @@
 
 namespace App\Controller\Api\v1;
 
-use App\Entity\Product;
 use App\Entity\Supplier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Attributes as OA;
 
 
 class SupplierController extends AbstractController
@@ -30,7 +28,7 @@ class SupplierController extends AbstractController
     }
 
     #[Route('/api/v1/supplier/{id}', name: 'v1_getSupplier', methods: ['GET'])]
-    public function getSupplier(EntityManagerInterface $entityManager, $id): JsonResponse
+    public function getSupplier(EntityManagerInterface $entityManager, $id): JsonResponse|Response
     {
         $suppliers = $entityManager->createQueryBuilder()
             ->select('s.id AS supplier_id',
@@ -42,10 +40,14 @@ class SupplierController extends AbstractController
             ->where('s.id = :id')
             ->setParameter('id', $id)
             ->getQuery()->getResult();
+
+        if(empty($suppliers)) {
+            return new Response('Error 404: Supplier not found', '404');
+        }
         return $this->json($suppliers);
     }
     #[Route('/api/v1/supplier/{id}/products', name: 'v1_getSupplierProducts', methods: ['GET'])]
-    public function getSupplierProducts(EntityManagerInterface $entityManager, $id): JsonResponse
+    public function getSupplierProducts(EntityManagerInterface $entityManager, $id): JsonResponse|Response
     {
         $product = $entityManager->createQueryBuilder()
             ->select('p.id AS product_id',
@@ -59,6 +61,10 @@ class SupplierController extends AbstractController
             ->where('s.id = :id')
             ->setParameter('id', $id)
             ->getQuery()->getResult();
+
+        if(empty($product)) {
+            return new Response('Error 404: Supplier not found', '404');
+        }
         return $this->json($product);
     }
 
@@ -68,8 +74,9 @@ class SupplierController extends AbstractController
         $name = $request->get('name');
         $shipping = $request->get('shipping');
         $paymentMethods = $request->get('paymentMethods');
-        $notes = $request->get('notes');
+        $notes = $request->get('notes') ?? null;
         $url = $request->get('url');
+        $priceXpath = $request->get('priceXpath');
 
         if (!$name || !$shipping || !$paymentMethods || !$url) {
             return new Response('Error 400: You didnt fill in all the required fields', '400');
@@ -85,6 +92,7 @@ class SupplierController extends AbstractController
         $supplier->setPaymentMethods($paymentMethods);
         $supplier->setNotes($notes);
         $supplier->setUrl($url);
+        $supplier->setPriceXPath($priceXpath);
 
         $entityManager->persist($supplier);
         $entityManager->flush();
@@ -96,6 +104,9 @@ class SupplierController extends AbstractController
     public function updateSupplier(EntityManagerInterface $entityManager, Request $request, $id): JsonResponse|Response
     {
         $supplier = $entityManager->getRepository(Supplier::class)->find($id);
+        if(!$supplier) {
+            return new Response('Error 404: Supplier not found', '400');
+        }
 
         if ($request->get('name')) {
             $supplier->setName($request->get('name'));
@@ -119,6 +130,9 @@ class SupplierController extends AbstractController
         if ($request->get('notes')) {
             $supplier->setNotes($request->get('notes'));
         }
+        if ($request->get('priceXpath')) {
+            $supplier->setNotes($request->get('priceXpath'));
+        }
 
         $entityManager->persist($supplier);
         $entityManager->flush();
@@ -127,9 +141,12 @@ class SupplierController extends AbstractController
     }
 
     #[Route('/api/v1/supplier/{id}', name: 'v1_deleteSupplier', methods: ['DELETE'])]
-    public function deleteSupplier(EntityManagerInterface $entityManager, $id): JsonResponse
+    public function deleteSupplier(EntityManagerInterface $entityManager, $id): JsonResponse|Response
     {
         $supplier = $entityManager->getRepository(Supplier::class)->find($id);
+        if(!$supplier) {
+            return new Response('Error 404: Supplier not found', '400');
+        }
         $entityManager->remove($supplier);
         $entityManager->flush();
         return new JsonResponse('Supplier Removed');

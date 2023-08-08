@@ -4,7 +4,7 @@ namespace App\Service;
 
 class RandomGenerator
 {
-    function generateRandomString($length): String {
+    function generateRandomString(int $length = 64): String {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';

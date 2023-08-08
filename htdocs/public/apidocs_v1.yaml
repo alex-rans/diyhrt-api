@@ -1,0 +1,568 @@
+openapi: 3.0.3
+info:
+  title: diyhrt.cafe api
+  description: diyhrt.cafe api
+  version: 1.0.0
+servers:
+  - url: 'https://api.diyhrt.cafe/v1'
+tags:
+  - name: product
+    description: 'Methods for retrieving product data'
+  - name: supplier
+    description: 'Methods for retrieving supplier data'
+  - name: user
+    description: 'Viewing and creating users. Authorized access only'
+paths:
+  /product:
+    get:
+      tags:
+        - product
+      summary: 'Get all products'
+      description: 'Get an array of all products'
+      parameters:
+        - name: type
+          in: query
+          description: 'Returns a list of products filtered by specific type. See documentation for all product types.'
+          required: false
+          explode: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 'Parameter type was incorrect'
+    post:
+      tags:
+        - product
+      summary: 'Insert a new product'
+      description: 'Creates a new product. Reserved for authorized users only'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: true
+                  example: 'Estrofem 24 x 2mg'
+                type:
+                  type: string
+                  required: true
+                  example: 'Estradiol Pills'
+                price:
+                  type: integer
+                  required: false
+                  example: 19.99
+                priceBulk:
+                  type: integer
+                  required: false
+                  example: 18.99
+                notes:
+                  type: string
+                  required: false
+                  example: 'peepeepoopoo'
+                url:
+                  type: string
+                  required: true
+                  example: 'https://www.pathtoproduct.com'
+                priceXpath:
+                  type: string
+                  required: false
+                  example: "li[@id='price']"
+                supplierId:
+                  type: integer
+                  required: true
+                  example: 12
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 'Missing required fields'
+        '401':
+          description: 'No API token provided or invalid credentials'
+
+  /product/{id}:
+    get:
+      tags:
+        - product
+      summary: 'Find a specific product'
+      description: 'Returns a specific product by the given ID'
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of product to return'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 'Product not found'
+    post:
+      tags:
+        - product
+      summary: 'Updates specific product'
+      description: 'Updates a product with the given ID. Reserved for authorized users only'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: false
+                  example: 'Estrofem 24 x 2mg'
+                type:
+                  type: string
+                  required: false
+                  example: 'Estradiol Pills'
+                price:
+                  type: integer
+                  required: false
+                  example: 19.99
+                priceBulk:
+                  type: integer
+                  required: false
+                  example: 18.99
+                notes:
+                  type: string
+                  required: false
+                  example: 'peepeepoopoo'
+                url:
+                  type: string
+                  required: false
+                  example: 'https://www.pathtoproduct.com'
+                priceXpath:
+                  type: string
+                  required: false
+                  example: "li[@id='price']"
+                supplierId:
+                  type: integer
+                  required: false
+                  example: 12
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+        - in: path
+          name: id
+          required: true
+          description: 'ID of product you want to modify'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 'The type is not correct'
+        '401':
+          description: 'No API token provided or invalid credentials'
+        '404':
+          description: 'Product not found'
+    delete:
+      tags:
+        - product
+      summary: 'Deletes a product'
+      description: 'Deletes a product with the given ID. Reserved for authorized users only'
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+        - in: path
+          name: id
+          required: true
+          description: 'ID of product you want to modify'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+        '404':
+          description: 'Product not found'
+        '401':
+          description: 'No API token provided or invalid credentials'
+  /product/types:
+    get:
+      tags:
+        - product
+      summary: 'Get product types'
+      description: 'Returns an array of all product types.'
+      responses:
+        '200':
+          description: 'Successful operation'
+
+  /supplier:
+    get:
+      tags:
+        - supplier
+      summary: 'Get all suppliers'
+      description: 'Get an array of all suppliers'
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+    post:
+      tags:
+        - supplier
+      summary: 'Insert a new supplier'
+      description: 'Creates a new supplier. Reserved for authorized users only'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: true
+                  example: 'Bathtub estrogena'
+                paymentMethods:
+                  type: array
+                  required: true
+                  example: '[Bank Transfer, BitCoin, PayPal]'
+                shipping:
+                  type: string
+                  required: true
+                  example: 'Ships from the second circle of hell'
+                notes:
+                  type: string
+                  required: false
+                  example: 'Shipping may take a while'
+                url:
+                  type: string
+                  required: true
+                  example: 'https://www.pathtopsupplier.com'
+                priceXpath:
+                  type: string
+                  required: false
+                  example: "li[@id='price']"
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        '400':
+          description: 'Missing required fields'
+        '401':
+          description: 'No API token provided or invalid credentials'
+  /supplier/{id}:
+    get:
+      tags:
+        - supplier
+      summary: 'Find a specific supplier'
+      description: 'Returns a specific supplier by the given ID'
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of supplier to return'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Supplier'
+        '404':
+          description: 'Supplier not found'
+    post:
+      tags:
+        - supplier
+      summary: 'Updates specific supplier'
+      description: 'Updates a supplier with the given ID. Reserved for authorized users only'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: true
+                  example: 'Bathtub estrogena'
+                paymentMethods:
+                  type: array
+                  required: true
+                  example: '[Bank Transfer, BitCoin, PayPal]'
+                shipping:
+                  type: string
+                  required: true
+                  example: 'Ships from the second circle of hell'
+                notes:
+                  type: string
+                  required: false
+                  example: 'Shipping may take a while'
+                url:
+                  type: string
+                  required: true
+                  example: 'https://www.pathtopsupplier.com'
+                priceXpath:
+                  type: string
+                  required: false
+                  example: "li[@id='price']"
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+        - in: path
+          name: id
+          required: true
+          description: 'ID of supplier you want to modify'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '401':
+          description: 'No API token provided or invalid credentials'
+        '404':
+          description: 'Supplier not found'
+    delete:
+      tags:
+        - supplier
+      summary: 'Deletes a supplier'
+      description: 'Deletes a supplier with the given ID. Reserved for authorized users only'
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+        - in: path
+          name: id
+          required: true
+          description: 'ID of supplier you want to delete'
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+        '404':
+          description: 'Supplier not found'
+        '401':
+          description: 'No API token provided or invalid credentials'
+  /supplier/{id}/products:
+    get:
+      tags:
+        - supplier
+      summary: 'Find all products of a supplier'
+      description: 'Returns an array of products from a specific supplier by the given ID'
+      parameters:
+        - name: id
+          in: path
+          description: 'ID of supplier'
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Successful operation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: 'Supplier not found'
+
+  /user:
+    get:
+      tags:
+        - user
+      summary: 'Get a specific user'
+      description: 'Returns a specific user by their email address'
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: 'email address of user'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Operation succesfull'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    post:
+      tags:
+        - user
+      summary: 'Create a new user'
+      description: 'Creates a new user and returns their login information'
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  required: true
+                  example: 'user@email.com'
+      responses:
+        '200':
+          description: 'Operation succesfull'
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                    example: 'user@email.com'
+                  token:
+                    type: string
+                    example: 'randomgibberishsupersecretpassword'
+        '404':
+          description: 'Not a valid email'
+    delete:
+      tags:
+        - user
+      summary: 'Deletes a user'
+      description: 'Deletes a user with the given email. Reserved for authorized users only'
+      parameters:
+        - in: header
+          name: 'X-AUTH-TOKEN'
+          required: true
+          description: 'Authentication token'
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: 'email address of user'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Successful operation'
+        '401':
+          description: 'Not a valid email'
+        '404':
+          description: 'User not found'
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          example: 1
+        product_name:
+          type: string
+          example: 'Estraheal 28 x 2mg'
+        product_type:
+          type: string
+          example: 'Estradiol Pills'
+        product_price:
+          type: number
+          example: 4.99
+        product_price_bulk:
+          type: number
+          example: 4.49
+        product_notes:
+          type: string
+          example: 'Out of stock'
+        product_link:
+          type: string
+          example: 'https://www.linktoproduct.com'
+        supplier_id:
+          type: integer
+          example: 24
+    Supplier:
+      type: object
+      properties:
+        supplier_id:
+          type: integer
+          example: 1
+        supplier_name:
+          type: string
+          example: 'Bathtub estrogena'
+        supplier_paymentmethods:
+          type: array
+          example: "[Bank Transfer, BitCoin, PayPal]"
+          items:
+            type: string
+        supplier_url:
+          type: string
+          example: 'https://www.urltosupplier.com'
+        supplier_notes:
+          type: string
+          example: 'On hiatus'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: 'admin@diyhrt.cafe'

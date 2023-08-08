@@ -10,40 +10,52 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Attributes as OA;
 
 
 class UserController extends AbstractController
 {
+    //get single user
     #[Route('/api/v1/user', name: 'v1_getUsers', methods: ['GET'])]
-    public function getUsers(EntityManagerInterface $entityManager): JsonResponse
+    public function getUsers(EntityManagerInterface $entityManager, Request $request): JsonResponse|Response
     {
-        $users = $entityManager->createQueryBuilder()
-            ->select('u.id', 'u.email')
-            ->from('App\Entity\User', 'u');
-        return $this->json($users->getQuery()->getResult());
+        if ($request->get('email')) {
+            $users = $entityManager->createQueryBuilder()
+                ->select('u.id', 'u.email')
+                ->from('App\Entity\User', 'u')
+                ->where('u.email = :email')
+                ->setParameter(':email', $request->get('email'))
+                ->getQuery()->getResult();
+            if(empty($users)) {
+                return new Response('Error 404: User not found.', '404');
+            }
+            return $this->json($users);
+        }
+        return new Response('Error 400: Provide an email to search for a user.', '404');
     }
 
     //get single user
-    #[Route('/api/v1/user/{email}', name: 'v1_getUser', methods: ['GET'])]
-    public function getUsesr(EntityManagerInterface $entityManager, $email): JsonResponse
-    {
-        $user = $entityManager->createQueryBuilder()
-            ->select('u.id', 'u.email')
-            ->from('App\Entity\User', 'u')
-            ->where('u.email = :email')
-            ->setParameter('email', $email);
-        return $this->json($user->getQuery()->getResult());
-    }
+//    #[Route('/api/v1/user/{email}', name: 'v1_getUser', methods: ['GET'])]
+//    public function getUsesr(EntityManagerInterface $entityManager, $email): JsonResponse
+//    {
+//        $user = $entityManager->createQueryBuilder()
+//            ->select('u.id', 'u.email')
+//            ->from('App\Entity\User', 'u')
+//            ->where('u.email = :email')
+//            ->setParameter('email', $email);
+//        return $this->json($user->getQuery()->getResult());
+//    }
 
     //insert users
     #[Route('/api/v1/user', name: 'v1_insertUsers', methods: ['POST'])]
     public function insertUsers(
         EntityManagerInterface $entityManager,
         RandomGenerator        $randomGenerator,
-        Request                $request): JsonResponse
+        Request                $request): JsonResponse|Response
     {
         $email = $request->get('email');
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return new Response('Error 400: Not a valid email');
+        }
         $token = $randomGenerator->generateRandomString(64);
 
         $user = new User();
@@ -52,14 +64,19 @@ class UserController extends AbstractController
 
         $entityManager->persist($user);
         $entityManager->flush($user);
-        return $this->json($user);
+
+        $returnArray = [
+            'email' => $user->getEmail(),
+            'token' => $user->getApiToken()
+        ];
+        return $this->json($returnArray);
     }
 
     //delete users
-    #[OA\G]
-    #[Route('/api/v1/user/{email}', name: 'v1_deleteUsers', methods: ['DELETE'])]
-    public function deleteUsers(EntityManagerInterface $entityManager, $email): JsonResponse|Response
+    #[Route('/api/v1/user', name: 'v1_deleteUsers', methods: ['DELETE'])]
+    public function deleteUsers(EntityManagerInterface $entityManager, Request $request): JsonResponse|Response
     {
+        $email = $request->get('email');
         $user = $entityManager->getRepository(User::class)->findOneBy(["email" => $email]);
 
 
