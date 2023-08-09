@@ -97,7 +97,7 @@ class Product
         return $this->prixeXpath;
     }
 
-    public function setPrixeXpath(string $prixeXpath): static
+    public function setPrixeXpath(?string $prixeXpath): static
     {
         $this->prixeXpath = $prixeXpath;
 

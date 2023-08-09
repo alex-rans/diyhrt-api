@@ -3,6 +3,7 @@
 namespace App\Controller\Api\v1;
 
 use App\Entity\Product;
+use App\Entity\Supplier;
 use App\Service\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +15,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class ProductController extends AbstractController
 {
-    #[Route('/api/v1/product', name: 'v1_getProducts', methods: ['GET'])]
+    #[Route('/v1/product', name: 'v1_getProducts', methods: ['GET'])]
     public function getProducts(EntityManagerInterface $entityManager,
                                 SerializerInterface    $serializer,
                                 Request                $request,
@@ -56,13 +57,13 @@ class ProductController extends AbstractController
         return new JsonResponse($products, 200, [], true);
     }
 
-    #[Route('/api/v1/product/types', name: 'v1_getTypes', methods: ['GET'])]
+    #[Route('/v1/product/types', name: 'v1_getTypes', methods: ['GET'])]
     public function getTypes(Types $types): JsonResponse
     {
         return $this->json($types->getChoices());
     }
 
-    #[Route('/api/v1/product/{id}', name: 'v1_getProduct', methods: ['GET'])]
+    #[Route('/v1/product/{id}', name: 'v1_getProduct', methods: ['GET'])]
     public function getProduct(EntityManagerInterface $entityManager, string $id): JsonResponse|Response
     {
         $product = $entityManager->createQueryBuilder()
@@ -87,7 +88,7 @@ class ProductController extends AbstractController
         return $this->json($product);
     }
 
-    #[Route('/api/v1/product', name: 'v1_insertProduct', methods: ['POST'])]
+    #[Route('/v1/product', name: 'v1_insertProduct', methods: ['POST'])]
     public function insertProduct(EntityManagerInterface $entityManager,
                                   Request                $request, Types $types): JsonResponse|Response
     {
@@ -99,14 +100,15 @@ class ProductController extends AbstractController
         $priceBulk = $request->get('priceBulk') ?? null;
         $notes = $request->get('notes') ?? null;
         $supplierId = $request->get('supplierId');
-        dd($request);
 
         if (!$name || !$type || !$url || !$supplierId) {
             return new Response('Error 400: Missing required fields', '400');
         }
-        if ($types->isCorrectType($request->get('type'))) {
+        if (!$types->isCorrectType($request->get('type'))) {
             return new Response('Error 400: The type is not correct', '400');
         }
+
+        $supplier = $entityManager->getRepository(Supplier::class)->find($supplierId);
 
         $product = new Product();
         $product->setName($name);
@@ -115,7 +117,7 @@ class ProductController extends AbstractController
         $product->setPrice($price);
         $product->setPriceBulk($priceBulk);
         $product->setType($type);
-        $product->setSupplier($supplierId);
+        $product->setSupplier($supplier);
         $product->setNotes($notes);
 
         $entityManager->persist($product);
@@ -123,11 +125,15 @@ class ProductController extends AbstractController
         return $this->json($product);
     }
 
-    #[Route('/api/v1/product/{id}', name: 'v1_updateProduct', methods: ['POST'])]
+    #[Route('/v1/product/{id}', name: 'v1_updateProduct', methods: ['POST'])]
     public function updateProduct(EntityManagerInterface $entityManager,
                                   Request                $request, Types $types,
                                                          $id): JsonResponse|Response
     {
+        if(empty($request->request->all())) {
+            return new Response('Error 400: No parameters given', '400');
+        }
+
         $product = $entityManager->getRepository(Product::class)->find($id);
 
         if(!$product) {
@@ -143,7 +149,7 @@ class ProductController extends AbstractController
         $notes = $request->get('notes') ?? null;
         $supplierId = $request->get('supplierId');
 
-        if (!$types->isCorrectType($request->get('type'))) {
+        if ($type && !$types->isCorrectType($request->get('type'))) {
             return new Response('Error 400: The type is not correct', '400');
         }
 
@@ -170,7 +176,8 @@ class ProductController extends AbstractController
             $product->setPriceBulk($priceBulk);
         }
         if ($supplierId) {
-            $product->setSupplier($supplierId);
+            $supplier = $entityManager->getRepository(Supplier::class)->find($supplierId);
+            $product->setSupplier($supplier);
         }
 
         $entityManager->persist($product);
@@ -178,7 +185,7 @@ class ProductController extends AbstractController
         return $this->json($product);
     }
 
-    #[Route('/api/v1/product/{id}', name: 'v1_deleteProduct', methods: ['DELETE'])]
+    #[Route('/v1/product/{id}', name: 'v1_deleteProduct', methods: ['DELETE'])]
     public function deleteProduct(EntityManagerInterface $entityManager, $id): JsonResponse|Response
     {
         $product = $entityManager->getRepository(Product::class)->find($id);
@@ -187,7 +194,7 @@ class ProductController extends AbstractController
         }
         $entityManager->remove($product);
         $entityManager->flush();
-        return $this->json('product deleted');
+        return $this->json('Product deleted');
     }
 
 

@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SupplierController extends AbstractController
 {
-    #[Route('/api/v1/supplier/', name: 'v1_getSuppliers', methods: ['GET'])]
+    #[Route('/v1/supplier', name: 'v1_getSuppliers', methods: ['GET'])]
     public function getSuppliers(EntityManagerInterface $entityManager): JsonResponse
     {
         $suppliers = $entityManager->createQueryBuilder()
@@ -27,7 +27,7 @@ class SupplierController extends AbstractController
         return $this->json($suppliers);
     }
 
-    #[Route('/api/v1/supplier/{id}', name: 'v1_getSupplier', methods: ['GET'])]
+    #[Route('/v1/supplier/{id}', name: 'v1_getSupplier', methods: ['GET'])]
     public function getSupplier(EntityManagerInterface $entityManager, $id): JsonResponse|Response
     {
         $suppliers = $entityManager->createQueryBuilder()
@@ -46,7 +46,7 @@ class SupplierController extends AbstractController
         }
         return $this->json($suppliers);
     }
-    #[Route('/api/v1/supplier/{id}/products', name: 'v1_getSupplierProducts', methods: ['GET'])]
+    #[Route('/v1/supplier/{id}/products', name: 'v1_getSupplierProducts', methods: ['GET'])]
     public function getSupplierProducts(EntityManagerInterface $entityManager, $id): JsonResponse|Response
     {
         $product = $entityManager->createQueryBuilder()
@@ -68,7 +68,7 @@ class SupplierController extends AbstractController
         return $this->json($product);
     }
 
-    #[Route('/api/v1/supplier/', name: 'v1_insertSupplier', methods: ['POST'])]
+    #[Route('/v1/supplier', name: 'v1_insertSupplier', methods: ['POST'])]
     public function insertSupplier(EntityManagerInterface $entityManager, Request $request): JsonResponse|Response
     {
         $name = $request->get('name');
@@ -77,12 +77,16 @@ class SupplierController extends AbstractController
         $notes = $request->get('notes') ?? null;
         $url = $request->get('url');
         $priceXpath = $request->get('priceXpath');
+        $currency = $request->get('currency');
 
-        if (!$name || !$shipping || !$paymentMethods || !$url) {
+        if (!$name || !$shipping || !$paymentMethods || !$url || !$priceXpath || !$currency) {
             return new Response('Error 400: You didnt fill in all the required fields', '400');
         }
+        if (strlen($currency) !== 3) {
+            return new Response('Error 400: Currency is not a 3 letter currency code', '400');
+        }
         if (!is_array($paymentMethods)) {
-            return new Response('Error 400: field paymentMethods is not an array', '400');
+            return new Response('Error 400: Field paymentMethods is not an array', '400');
 
         }
 
@@ -93,6 +97,7 @@ class SupplierController extends AbstractController
         $supplier->setNotes($notes);
         $supplier->setUrl($url);
         $supplier->setPriceXPath($priceXpath);
+        $supplier->setCurrency($currency);
 
         $entityManager->persist($supplier);
         $entityManager->flush();
@@ -100,9 +105,13 @@ class SupplierController extends AbstractController
         return $this->json($supplier);
     }
 
-    #[Route('/api/v1/supplier/{id}', name: 'v1_updateSupplier', methods: ['POST'])]
+    #[Route('/v1/supplier/{id}', name: 'v1_updateSupplier', methods: ['POST'])]
     public function updateSupplier(EntityManagerInterface $entityManager, Request $request, $id): JsonResponse|Response
     {
+        if(empty($request->request->all())) {
+            return new Response('Error 400: No parameters given', '400');
+        }
+
         $supplier = $entityManager->getRepository(Supplier::class)->find($id);
         if(!$supplier) {
             return new Response('Error 404: Supplier not found', '400');
@@ -137,10 +146,10 @@ class SupplierController extends AbstractController
         $entityManager->persist($supplier);
         $entityManager->flush();
 
-        return new JsonResponse($supplier);
+        return $this->json($supplier);
     }
 
-    #[Route('/api/v1/supplier/{id}', name: 'v1_deleteSupplier', methods: ['DELETE'])]
+    #[Route('/v1/supplier/{id}', name: 'v1_deleteSupplier', methods: ['DELETE'])]
     public function deleteSupplier(EntityManagerInterface $entityManager, $id): JsonResponse|Response
     {
         $supplier = $entityManager->getRepository(Supplier::class)->find($id);

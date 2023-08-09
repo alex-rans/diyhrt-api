@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     //get single user
-    #[Route('/api/v1/user', name: 'v1_getUsers', methods: ['GET'])]
+    #[Route('/v1/user', name: 'v1_getUsers', methods: ['GET'])]
     public function getUsers(EntityManagerInterface $entityManager, Request $request): JsonResponse|Response
     {
         if ($request->get('email')) {
@@ -34,7 +34,7 @@ class UserController extends AbstractController
     }
 
     //get single user
-//    #[Route('/api/v1/user/{email}', name: 'v1_getUser', methods: ['GET'])]
+//    #[Route('/v1/user/{email}', name: 'v1_getUser', methods: ['GET'])]
 //    public function getUsesr(EntityManagerInterface $entityManager, $email): JsonResponse
 //    {
 //        $user = $entityManager->createQueryBuilder()
@@ -46,7 +46,7 @@ class UserController extends AbstractController
 //    }
 
     //insert users
-    #[Route('/api/v1/user', name: 'v1_insertUsers', methods: ['POST'])]
+    #[Route('/v1/user', name: 'v1_insertUsers', methods: ['POST'])]
     public function insertUsers(
         EntityManagerInterface $entityManager,
         RandomGenerator        $randomGenerator,
@@ -73,7 +73,7 @@ class UserController extends AbstractController
     }
 
     //delete users
-    #[Route('/api/v1/user', name: 'v1_deleteUsers', methods: ['DELETE'])]
+    #[Route('/v1/user', name: 'v1_deleteUsers', methods: ['DELETE'])]
     public function deleteUsers(EntityManagerInterface $entityManager, Request $request): JsonResponse|Response
     {
         $email = $request->get('email');
