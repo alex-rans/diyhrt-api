@@ -26,58 +26,63 @@ class WikiScraper
         return $web;
     }
 
-    public function getProducts(string $url): array
+    public function getProducts(array $choices): array
     {
         $productsArray = [];
-        $link = $this->init($url);
-        $type = $link->filter('//*[@id="firstHeading"]')->text();
+        foreach ($choices as $choice) {
+            $choice = str_replace(' ', '_', $choice);
 
-        $typeTitle = str_replace(" ", "_", $type);
-        $link = $this->init("https://diyhrt.cafe/index.php?title={$typeTitle}&action=edit");
+            $url = "https://diyhrt.cafe/index.php/{$choice}";
+            $link = $this->init($url);
+            $type = $link->filter('//*[@id="firstHeading"]')->text();
 
-        $text = $link->filter('//*[@id="wpTextbox1"]')->text();
-        $textArray = explode("|-", $text);
-        $textArray = array_slice($textArray, 1);
+            $typeTitle = str_replace(" ", "_", $type);
+            $link = $this->init("https://diyhrt.cafe/index.php?title={$choice}&action=edit");
 
-        foreach ($textArray as $product) {
-            $productArray = explode("|", $product);
+            $text = $link->filter('//*[@id="wpTextbox1"]')->text();
+            $textArray = explode("|-", $text);
+            $textArray = array_slice($textArray, 1);
 
-            //get supplier
-            $supplierArray = str_replace(['[', ']'], '', $productArray[6]);
-            $supplierArray = explode(" ", $supplierArray);
-            $url = $supplierArray[0];
-            array_shift($supplierArray);
-            $supplier = trim(implode(" ", $supplierArray));
-            $supplier = $this->entityManager->getRepository(Supplier::class)->findOneBy(['name' => $supplier]);
+            foreach ($textArray as $product) {
+                $productArray = explode("|", $product);
 
-            //price text to float
-            $price = preg_replace('/[^0-9.]+/', '', trim($productArray[2]));
-            $price = (float)$price;
+                //get supplier
+                $supplierArray = str_replace(['[', ']'], '', $productArray[6]);
+                $supplierArray = explode(" ", $supplierArray);
+                $url = $supplierArray[0];
+                array_shift($supplierArray);
+                $supplier = trim(implode(" ", $supplierArray));
+                $supplier = $this->entityManager->getRepository(Supplier::class)->findOneBy(['name' => $supplier]);
 
-            //price bulk
-            $priceBulk = preg_replace('/[^0-9.]+/', '', trim($productArray[3]));
-            $priceBulk = (float) $priceBulk;
+                //price text to float
+                $price = preg_replace('/[^0-9.]+/', '', trim($productArray[2]));
+                $price = (float)$price;
 
-            //notes
-            $notes = null;
-            if (!empty(trim($productArray[8]))) {
-                $notes = trim($productArray[8]);
+                //price bulk
+                $priceBulk = preg_replace('/[^0-9.]+/', '', trim($productArray[3]));
+                $priceBulk = (float) $priceBulk;
+
+                //notes
+                $notes = null;
+                if (!empty(trim($productArray[8]))) {
+                    $notes = trim($productArray[8]);
+                }
+                if (!$supplier) {
+                    print_r("Supplier not found in DB. Breaking \n");
+                    continue;
+                }
+
+                $productObject = [
+                    "name" => trim($productArray[1]),
+                    "price" => $price,
+                    "priceBulk" => $priceBulk,
+                    "supplierId" => $supplier->getId(),
+                    "url" => $url,
+                    "notes" => $notes,
+                    "type" => $type
+                ];
+                array_push($productsArray, $productObject);
             }
-            if (!$supplier) {
-                print_r("Supplier not found in DB. Breaking \n");
-                continue;
-            }
-
-            $productObject = [
-                "name" => trim($productArray[1]),
-                "price" => $price,
-                "priceBulk" => $priceBulk,
-                "supplierId" => $supplier->getId(),
-                "url" => $url,
-                "notes" => $notes,
-                "type" => $type
-            ];
-            array_push($productsArray, $productObject);
         }
         return $productsArray;
     }

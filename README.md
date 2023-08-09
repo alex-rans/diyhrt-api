@@ -36,12 +36,14 @@ Current list of sites that have or can have different XPath's:
 * favskinshouse.com (id number)
 * unitedpharmacies.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
 * unitedpharmacies-uk.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
-* SELECT * FROM `product` WHERE supplier_id IN (3, 4, 12);
+* otokonokopharma (multiple select products. Modify last number in xpath)
+
+[//]: # (* SELECT * FROM `product` WHERE supplier_id IN &#40;3, 4, 12&#41;;)
 
 ## Product units
 
 price/mg or bulk/mg is calculated and therefore not stored in the database. The way the back-end calculates this is by
-dividing the price by the amount of "untis". The units is usually just the amount of milligrams but sometimes it can be
+dividing the price by the amount of "untis". The units usually is just the amount of milligrams, but sometimes it can be
 a different number depending on how the wiki displays or calculates price/unit. Is this stupid? Yes. Does it work? Also
 yes.
 
@@ -83,3 +85,16 @@ php bin/console scrape:products [options, comma seperated]
 | Option    | Description             |
 |-----------|-------------------------|
 | [options] | Option of product types |
+
+**generate table for wiki**
+
+```
+// dev environment
+lando c generate:table [option]
+// production environment
+php bin/console generate:table [option]
+```
+
+| Option   | Description             |
+|----------|-------------------------|
+| [option] | Option of product types |

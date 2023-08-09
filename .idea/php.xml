@@ -64,16 +64,7 @@
       <path value="$PROJECT_DIR$/htdocs/vendor/psr/log" />
       <path value="$PROJECT_DIR$/htdocs/vendor/psr/container" />
       <path value="$PROJECT_DIR$/htdocs/vendor/nikic/php-parser" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/zircote/swagger-php" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/doctrine/annotations" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/webmozart/assert" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/phpdocumentor/reflection-common" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/phpdocumentor/type-resolver" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/phpdocumentor/reflection-docblock" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/phpstan/phpdoc-parser" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/nelmio/api-doc-bundle" />
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/property-info" />
-      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/options-resolver" />
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/apache-pack" />
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/twig-bundle" />
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/twig-bridge" />
@@ -103,7 +94,56 @@
       <path value="$PROJECT_DIR$/htdocs/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/htdocs/vendor/donatello-za/rake-php-plus" />
       <path value="$PROJECT_DIR$/htdocs/vendor/symfony/webpack-encore-bundle" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phar-io/version" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phar-io/manifest" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/myclabs/deep-copy" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpunit/php-file-iterator" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpunit/php-invoker" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpunit/php-code-coverage" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpunit/php-timer" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpunit/phpunit" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpunit/php-text-template" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/theseer/tokenizer" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/code-unit-reverse-lookup" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/object-reflector" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/complexity" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/cli-parser" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/code-unit" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/version" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/object-enumerator" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/diff" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/recursion-context" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/environment" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/lines-of-code" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/global-state" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/type" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/comparator" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/exporter" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/phpunit-bridge" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/sebastian/resource-operations" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/willdurand/negotiation" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpdocumentor/type-resolver" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpdocumentor/reflection-docblock" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpdocumentor/reflection-common" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/nelmio/cors-bundle" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/psr/link" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/validator" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/serializer-pack" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/expression-language" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/web-link" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/symfony/orm-pack" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/webmozart/assert" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/api-platform/api-pack" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/api-platform/core" />
+      <path value="$PROJECT_DIR$/htdocs/vendor/phpstan/phpdoc-parser" />
     </include_path>
+  </component>
+  <component name="PhpInterpreters">
+    <interpreters>
+      <interpreter id="8d6e8578-e6d8-4304-9e3b-cba2f7dac4f7" name="Ubuntu" home="\\wsl$\Ubuntu/usr/bin/php" false="false" debugger_id="php.debugger.XDebug">
+        <remote_data INTERPRETER_PATH="/usr/bin/php" HELPERS_PATH="" VALID="true" RUN_AS_ROOT_VIA_SUDO="false" DISTRIBUTION_ID="Ubuntu" />
+      </interpreter>
+    </interpreters>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1">
     <option name="suggestChangeDefaultLanguageLevel" value="false" />

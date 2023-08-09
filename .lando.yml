@@ -32,6 +32,9 @@ tooling:
   c:
     service: appserver
     cmd: htdocs/bin/console
+  test:
+    service: appserver
+    cmd: htdocs/bin/phpunit -c htdocs/phpunit.xml.dist
   symfony:
     service: appserver
     dir: /app/htdocs

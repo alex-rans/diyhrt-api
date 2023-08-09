@@ -20,7 +20,6 @@ class ProductController extends AbstractController
                                 Request                $request,
                                 Types                  $types): JsonResponse|Response
     {
-
         if ($request->get('type')) {
             if (!$types->isCorrectType($request->get('type'))) {
                 return new Response('Error 400: Parameter \'type\' is incorrect', '400');
@@ -88,7 +87,7 @@ class ProductController extends AbstractController
         return $this->json($product);
     }
 
-    #[Route('/api/v1/product/', name: 'v1_insertProduct', methods: ['POST'])]
+    #[Route('/api/v1/product', name: 'v1_insertProduct', methods: ['POST'])]
     public function insertProduct(EntityManagerInterface $entityManager,
                                   Request                $request, Types $types): JsonResponse|Response
     {
@@ -100,6 +99,7 @@ class ProductController extends AbstractController
         $priceBulk = $request->get('priceBulk') ?? null;
         $notes = $request->get('notes') ?? null;
         $supplierId = $request->get('supplierId');
+        dd($request);
 
         if (!$name || !$type || !$url || !$supplierId) {
             return new Response('Error 400: Missing required fields', '400');
