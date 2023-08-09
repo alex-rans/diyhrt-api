@@ -10,18 +10,17 @@ wiki uses the MediaWiki webapp, which is also written in PHP.
 
 ## Installation
 
-This repo is set up with [Lando](https://lando.dev/). Lando will automatically set up docket containers with the webapp
+This repo is set up with [Lando](https://lando.dev/). Lando will automatically set up docker containers with the webapp
 and the database. To set up this project run the following commands:
 
 ```
 lando start
 lando composer install
 lando c doctrine:migrations:migrate
+lando db-import dump.sql.gz
+lando npm i
+lando npm run build
 ```
-
-From there you can import the sql dump into the database.
-
-If you use windows you can use WSL to set up a linux dev environment.
 
 ## Product XPaths's
 
@@ -37,8 +36,7 @@ Current list of sites that have or can have different XPath's:
 * unitedpharmacies.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
 * unitedpharmacies-uk.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
 * otokonokopharma (multiple select products. Modify last number in xpath)
-
-[//]: # (* SELECT * FROM `product` WHERE supplier_id IN &#40;3, 4, 12&#41;;)
+* otc-online-store (I have to write custom code for to work with multi select and I don't feel like)
 
 ## Product units
 
@@ -63,28 +61,28 @@ There are a few commands available to scrape data from both the wiki and from pr
 
 ```
 // dev environment
-lando c scrape:wiki "{url}"
+lando c scrape:wiki
 // production environment
-php bin/console scrape:wiki "{url}"
+php bin/console scrape:wiki
 ```
 
-| Option         | Description                                    |
-|----------------|------------------------------------------------|
-| -s, --supplier | Scrapes the front page for suppliers. Optional |
-| url            | Url to product type page thing?                |
+| Option         | Description                                          |
+|----------------|------------------------------------------------------|
+| -s, --supplier | Scrapes the front page for suppliers. Optional       |
+| [options]      | Option of product types, multiselect comma seperated |
 
 **Scrape product pages**
 
 ```
 // dev environment
-lando c scrape:products [options, comma seperated]
+lando c scrape:products
 // production environment
-php bin/console scrape:products [options, comma seperated]
+php bin/console scrape:products
 ```
 
-| Option    | Description             |
-|-----------|-------------------------|
-| [options] | Option of product types |
+| Option    | Description                                          |
+|-----------|------------------------------------------------------|
+| [options] | Option of product types, multiselect comma seperated |
 
 **generate table for wiki**
 

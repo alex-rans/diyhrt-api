@@ -14,6 +14,6 @@ jobs:
       - name: upload
         run: rsync -avr htdocs ec2-user@${{ secrets.SSH_HOST }}:/var/www/diyhrtapi/
       - name: build
-        run: ssh ec2-user@${{ secrets.SSH_HOST }} "cd /var/www/diyhrtapi/htdocs && composer install --no-dev --optimize-autoloader && npm install && npm run build"
+        run: ssh ec2-user@${{ secrets.SSH_HOST }} "cd /var/www/diyhrtapi/htdocs && composer install --no-dev --optimize-autoloader --ignore-platform-req=ext-http --ignore-platform-req=ext-intl && npm install && npm run build"
       - name: change perms idk
         run: ssh ec2-user@${{ secrets.SSH_HOST }} "sudo chmod +777 /var/www/diyhrtapi/htdocs/var -R"
