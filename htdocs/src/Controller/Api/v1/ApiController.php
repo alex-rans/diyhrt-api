@@ -15,9 +15,9 @@ class ApiController extends AbstractController
     {
         return $this->render('index.html.twig');
     }
-//    #[Route('/test', name: 'test', methods: ['GET'])]
-//    public function test(RandomGenerator $randomGenerator): JsonResponse
-//    {
-//        dd($randomGenerator->generateRandomString());
-//    }
+    #[Route('/test', name: 'test', methods: ['GET'])]
+    public function test(RandomGenerator $randomGenerator): JsonResponse
+    {
+        dd($randomGenerator->generateRandomString());
+    }
 }

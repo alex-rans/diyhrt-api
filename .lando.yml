@@ -1,9 +1,9 @@
 name: diyhrt
 recipe: symfony
 excludes:
-  - htdocs/vendor
-  - htdocs/var/cache
-  - htdocs/node_modules
+  # - htdocs/vendor
+  # - htdocs/var/cache
+  # - htdocs/node_modules
 config:
   php: '8.2'
   composer_version: '2.2.12'
