@@ -188,7 +188,7 @@ WikiScraper
     public function CalculateUnits()
     {
         $products = $this->entityManager->getRepository(Product::class)->findBy(['units' => Null]);
-        foreach ($products as $product){
+        foreach ($products as $product) {
             switch ($product->getType()) {
                 case 'Finasteride':
                 case 'Estradiol Pills':
@@ -211,15 +211,13 @@ WikiScraper
                 case 'Estradiol Gel':
                     $values = explode(' ', $product->getName());
                     //number x product
-                    if(preg_match('/\d+x/', $values[1])) {
+                    if (preg_match('/\d+x/', $values[1])) {
                         $multiplier = preg_replace("/[^0-9.]/", "", $values[1]);
                         $milligrams = preg_replace("/[^0-9.]/", "", end($values));
                         $product->setUnits($multiplier * $milligrams);
-                    }
-                    elseif (sizeof($values) === 3) {
+                    } elseif (sizeof($values) === 3) {
                         $product->setUnits(preg_replace("/[^0-9.]/", "", $values[2]));
-                    }
-                    else {
+                    } else {
                         $product->setUnits(preg_replace("/[^0-9.]/", "", end($values)));
                     }
                     $this->entityManager->flush();
@@ -227,14 +225,15 @@ WikiScraper
                 case 'Progesterone Injections':
                 case 'Estradiol Injections':
                     $values = explode(' ', $product->getName());
-                    if(preg_match('/^(\d{2})?$/', end($values))) {
-                        $milligrams = explode('/', $values[2]);
+
+                    if (preg_match('/^[0-9]+$/', end($values))) {
+                        $multiplier = end($values);
+                        $milligrams = array_slice($values, -3, 1);
+                        $milligrams = explode('/', $milligrams[0]);
                         $milligrams = preg_replace("/[^0-9.]/", "", $milligrams[0]);
-                        $multiplier = preg_replace("/[^0-9.]/", "", $values[4]);
                         $product->setUnits($milligrams * $multiplier);
-                    }
-                    else {
-                        $milligrams = explode('/', $values[2]);
+                    } else {
+                        $milligrams = explode('/', end($values));
                         $milligrams = preg_replace("/[^0-9.]/", "", $milligrams[0]);
                         $product->setUnits($milligrams);
                     }
@@ -272,7 +271,7 @@ WikiScraper
                     break;
                 case 'Gonadotropin-Releasing Hormone Agonists':
                     $values = explode(' ', $product->getName());
-                    if(preg_match('/^[0-9.]+mg$/', end($values))) {
+                    if (preg_match('/^[0-9.]+mg$/', end($values))) {
                         $milligrams = preg_replace("/[^0-9.]/", "", end($values));
                         $product->setUnits($milligrams);
                     }
@@ -321,14 +320,13 @@ WikiScraper
                     break;
                 case 'Hydroxyprogesterone Caproate Injections':
                     $values = explode(' ', $product->getName());
-                    if(preg_match('/^[0-9]+$/', end($values))) {
+                    if (preg_match('/^[0-9]+$/', end($values))) {
                         $multiplier = end($values);
                         $milligrams = array_slice($values, -3, 1);
                         $milligrams = explode('/', $milligrams[0]);
                         $milligrams = preg_replace("/[^0-9.]/", "", $milligrams[0]);
                         $product->setUnits(($milligrams * $multiplier) / 25);
-                    }
-                    else {
+                    } else {
                         $milligrams = explode('/', end($values));
                         $milligrams = preg_replace("/[^0-9.]/", "", $milligrams[0]);
                         $product->setUnits($milligrams / 25);

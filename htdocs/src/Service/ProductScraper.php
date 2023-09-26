@@ -30,6 +30,7 @@ class ProductScraper
     private function init(string $url): PHPScraper
     {
         $web = new \Spekulatius\PHPScraper\PHPScraper;
+        $web->setConfig(['agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/117.0']);
         $web->go($url);
         return $web;
     }
@@ -41,7 +42,7 @@ class ProductScraper
                 print_r("[ID: {$product->getId()}]: Scraping...");
 
                 if(!$product->getPrixeXpath() && !$product->getSupplier()->getPriceXPath()){
-                    print_r(" No XPath; Breaking.\n");
+                    print_r("No XPath; Breaking.\n");
                     continue;
                 }
                 try {

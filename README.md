@@ -37,6 +37,7 @@ Current list of sites that have or can have different XPath's:
 * unitedpharmacies-uk.md (depends on which table. Modify last number in xpath to the correct table. Default is 1)
 * otokonokopharma (multiple select products. Modify last number in xpath)
 * otc-online-store (I have to write custom code for to work with multi select and I don't feel like)
+* pharmaonline.tv return status 403 and therefore doesn't work. Setting headers will probably fix it
 
 ## Product units
 
